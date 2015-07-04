@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import sys
 import argparse
 import xml.etree.ElementTree as ET
 from ezodf import newdoc, Sheet
@@ -15,13 +16,29 @@ class Channel:
         self.count      = node.find('values').get('count')
 
     def appendSheet(self, sheet, column):
+        length = len(self.node.find('values'))
+
+        if (length < 1):
+            print('\r{1}{2} [{3}] {0}'.format('Skipped...', bold(repr(self.quantity)), ' '*(20-len(repr(self.quantity))), ' '*20)),
+            return
+
         sheet.column(column)[0].set_value(self.quantity)
         sheet.column(column)[1].set_value(self.symbol + ' / ' + (self.unit or ''))
+        update_progress(2 * 100 / length, self.quantity)
 
         row = 2;
         for value in self.node.find('values'):
             sheet.column(column)[row].set_value(float(value.text))
+            update_progress(row * 100 / length, self.quantity)
             row += 1
+
+def bold(msg):
+    return u'\033[1m%s\033[0m' % msg
+
+def update_progress(progress, title):
+    #sys.stdout.write("\r%d%%" % progress)
+    print('\r{2}{3} [{0}] {1}%'.format('#'*(progress/5), progress, bold(repr(title)), ' '*(20-len(repr(title))))),
+    sys.stdout.flush()
 
 # Parse input arguments
 parser = argparse.ArgumentParser(description='Convert and interpret .labx-files from the proprietary Leybold CASSY software. ')
@@ -64,11 +81,12 @@ else:
     col = 0
     for channel in channels:
         channel.appendSheet(sheet, col)
+        print('')
         col += 1
 
     spreadsheet.sheets += sheet
     spreadsheet.save()
 
-    print('-------------------------------------------')
+    print('\n-------------------------------------------')
     print('Saved ' + args.outputpath + ' successfully!')
     print('-------------------------------------------')
