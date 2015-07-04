@@ -16,3 +16,21 @@ python cassy-charts.py doc.labx -c 0 1 5
 python cassy-charts.py --help
 python cassy-charts.py -h
 ```
+
+## Help
+``` bash
+usage: cassy-charts.py [-h] [--channels [CHANNELS [CHANNELS ...]]] [--details]
+                       inputfile [outputfile]
+
+Convert and interpret .labx-files from the proprietary Leybold CASSY software.
+
+positional arguments:
+  inputfile             path to the .labx file
+  outputfile            path to the ods output file
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --channels [CHANNELS [CHANNELS ...]], -c [CHANNELS [CHANNELS ...]]
+                        whitelist channels to export
+  --details, -d         print details about the channels of the .labx file
+```
