@@ -6,7 +6,7 @@ from ezodf import newdoc, Sheet
 
 # Define Channel
 class Channel:
-    def __init__(self, node):
+    def __init__(self, node, index):
         self.node = node
         self.quantity   = node.find('quantity').text
         self.symbol     = node.find('symbol').text
@@ -14,6 +14,7 @@ class Channel:
         self.min        = node.find('range').get('min')
         self.max        = node.find('range').get('max')
         self.count      = node.find('values').get('count')
+        self.index      = index
 
     def appendSheet(self, sheet, column):
         length = len(self.node.find('values'))
@@ -46,7 +47,9 @@ parser.add_argument('inputpath', metavar='inputfile', type=str,
                    help='path to the .labx file')
 parser.add_argument('outputpath', metavar='outputfile', nargs='?',
                    help='path to the ods output file')
-parser.add_argument('--details', action='store_true',
+parser.add_argument('--channels', '-c', nargs='*',
+                   help='whitelist channels to export')
+parser.add_argument('--details', '-d', action='store_true',
                   help='print details about the channels of the .labx file')
 
 args = parser.parse_args()
@@ -56,14 +59,16 @@ tree = ET.parse(args.inputpath)
 root = tree.getroot()
 
 channels = []
+index = 0
 for channel in root.iter('channel'):
-    channels.append(Channel(channel))
+    channels.append(Channel(channel, index))
+    index += 1
 
 if args.details:
     index = 0
     print('-------------------------------------------')
     for channel in channels:
-        print('Index   : ' + str(index))
+        print('Index   : ' + str(channel.index))
         print('Quantity: ' + channel.quantity + '('+ channel.symbol + ')')
         print('Unit    : ' + (channel.unit or '--'))
         print('Range   : (' + str(round(float(channel.min), 3)) + ', ' + str(round(float(channel.max),3)) + ')')
@@ -72,6 +77,9 @@ if args.details:
             print('-------------------------------------------')
         index += 1
 else:
+    if len((args.outputpath or '')) < 1:
+        print('No output path specified. Use -h for help')
+        exit(1)
     # Construct a sheet from the channels
     length = channels[0].count
 
@@ -80,9 +88,11 @@ else:
 
     col = 0
     for channel in channels:
-        channel.appendSheet(sheet, col)
-        print('')
-        col += 1
+        if args.channels is not None:
+            if str(channel.index) in args.channels:
+                channel.appendSheet(sheet, col)
+                print('')
+                col += 1
 
     spreadsheet.sheets += sheet
     spreadsheet.save()

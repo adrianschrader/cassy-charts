@@ -10,5 +10,9 @@ pip install lxml ezodf
 ``` bash
 python cassy-charts.py doc.labx measurements.ods
 python cassy-charts.py doc.labx --details
+python cassy-charts.py doc.labx -d
+python cassy-charts.py doc.labx --channels 0 1 5
+python cassy-charts.py doc.labx -c 0 1 5
 python cassy-charts.py --help
+python cassy-charts.py -h
 ```
