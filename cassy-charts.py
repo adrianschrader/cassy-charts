@@ -21,7 +21,7 @@ class Channel:
 
         if (length < 1):
             print('\r{1}{2} [{3}] {0}'.format('Skipped...', bold(repr(self.quantity)), ' '*(20-len(repr(self.quantity))), ' '*20)),
-            return
+            return 0
 
         sheet.column(column)[0].set_value(self.quantity)
         sheet.column(column)[1].set_value(self.symbol + ' / ' + (self.unit or ''))
@@ -32,6 +32,7 @@ class Channel:
             sheet.column(column)[row].set_value(float(value.text))
             update_progress(row * 100 / length, self.quantity)
             row += 1
+        return 1
 
 def bold(msg):
     return u'\033[1m%s\033[0m' % msg
@@ -90,13 +91,12 @@ else:
     for channel in channels:
         if args.channels is not None:
             if str(channel.index) in args.channels:
-                channel.appendSheet(sheet, col)
+                col += channel.appendSheet(sheet, col)
                 print('')
-                col += 1
         else:
-            channel.appendSheet(sheet, col)
+            col += channel.appendSheet(sheet, col)
             print('')
-            col += 1
+
 
     spreadsheet.sheets += sheet
     spreadsheet.save()
