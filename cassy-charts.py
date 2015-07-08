@@ -93,6 +93,10 @@ else:
                 channel.appendSheet(sheet, col)
                 print('')
                 col += 1
+        else:
+            channel.appendSheet(sheet, col)
+            print('')
+            col += 1
 
     spreadsheet.sheets += sheet
     spreadsheet.save()
