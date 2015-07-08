@@ -43,7 +43,7 @@ def update_progress(progress, title):
     sys.stdout.flush()
 
 # Parse input arguments
-parser = argparse.ArgumentParser(description='Convert and interpret .labx-files from the proprietary Leybold CASSY software. ')
+parser = argparse.ArgumentParser(description='Convert and interpret .labx-files from the proprietary Leybold CASSY software. ', epilog='For more instructions see https://github.com/adrianschrader/cassy-charts')
 parser.add_argument('inputpath', metavar='inputfile', type=str,
                    help='path to the .labx file')
 parser.add_argument('outputpath', metavar='outputfile', nargs='?',
