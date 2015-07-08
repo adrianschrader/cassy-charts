@@ -2,7 +2,7 @@
 Python command line tool to convert .labx files from the proprietary Cassy Lab 2 to OpenDocument ODS spreadsheets. The tool can also display basic information about the retrieved measurements.
 
 ## Installation & Dependencies
-Python 2.7 and the spreadheet libraries lxml and ezodf have to be installed locally. You can install the dependencies with pip.
+Python 2.7 and the spreadsheet libraries lxml and ezodf have to be installed locally. You can install the dependencies with pip.
 ``` bash
 python --version
 pip install lxml ezodf
@@ -17,7 +17,7 @@ ln -s ~/path/to/repository/cassy-charts.py cassycharts
 ```
 
 ## Usage
-Prints help text with usage instructions and the link to the guthub repository.
+Prints help text with usage instructions and the link to the github repository.
 ``` bash
 python cassy-charts.py -h
 python cassy-charts.py --help
